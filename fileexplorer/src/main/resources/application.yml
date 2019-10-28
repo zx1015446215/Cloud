@@ -16,7 +16,7 @@ spring:
     host: localhost
   servlet:
     multipart:
-      max-file-size: 400MB
+      max-file-size: 300MB
       max-request-size: 500MB
   datasource:
     username: zhxshark
