@@ -1,0 +1,38 @@
+server:
+  port: 9002
+spring:
+  application:
+    name: file-explorer
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/file
+      host: 127.0.0.1
+      port: 27017
+      database: zxFile
+  redis:
+    port: 6379
+    database: 0  #默认是使用0号数据库，默认有16个数据库
+    password:
+    host: localhost
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 500MB
+  datasource:
+    username: zhxshark
+    password: zzzx19961026
+    url: jdbc:mysql://localhost:3306/zxblog?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+file:
+  relativePath: /file/
+mybatis:
+  type-aliases-package: com.zhxshark.fileexplorer.file.model
+  mapper-locations: classpath:mapper/**/*.xml
+
+logging:
+  level:
+    com.zhxshark.fileexplorer.file.mapper : debug

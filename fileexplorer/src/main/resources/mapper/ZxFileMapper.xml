@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhxshark.fileexplorer.file.mapper.ZxFileMapper">
+  <cache type="com.zhxshark.fileexplorer.config.MyRedisCache"></cache>
+
+  <resultMap id="BaseResultMap" type="com.zhxshark.fileexplorer.file.model.ZxFile">
+    <id column="object_id" jdbcType="VARCHAR" property="objectId" />
+    <result column="fd_create_time" jdbcType="VARCHAR" property="fdCreateTime" />
+    <result column="fd_eight" jdbcType="VARCHAR" property="fdEight" />
+    <result column="fd_file_image_path" jdbcType="VARCHAR" property="fdFileImagePath" />
+    <result column="fd_file_name" jdbcType="VARCHAR" property="fdFileName" />
+    <result column="fd_file_path" jdbcType="VARCHAR" property="fdFilePath" />
+    <result column="fd_file_tag" jdbcType="VARCHAR" property="fdFileTag" />
+    <result column="fd_file_type" jdbcType="VARCHAR" property="fdFileType" />
+    <result column="fd_five" jdbcType="VARCHAR" property="fdFive" />
+    <result column="fd_four" jdbcType="VARCHAR" property="fdFour" />
+    <result column="fd_id" jdbcType="VARCHAR" property="fdId" />
+    <result column="fd_is_available" jdbcType="TINYINT" property="fdIsAvailable" />
+    <result column="fd_nine" jdbcType="VARCHAR" property="fdNine" />
+    <result column="fd_one" jdbcType="VARCHAR" property="fdOne" />
+    <result column="fd_parent_id" jdbcType="VARCHAR" property="fdParentId" />
+    <result column="fd_person_id" jdbcType="VARCHAR" property="fdPersonId" />
+    <result column="fd_seven" jdbcType="VARCHAR" property="fdSeven" />
+    <result column="fd_six" jdbcType="VARCHAR" property="fdSix" />
+    <result column="fd_size" jdbcType="VARCHAR" property="fdSize" />
+    <result column="fd_ten" jdbcType="VARCHAR" property="fdTen" />
+    <result column="fd_three" jdbcType="VARCHAR" property="fdThree" />
+    <result column="fd_two" jdbcType="VARCHAR" property="fdTwo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    object_id, fd_create_time, fd_eight, fd_file_image_path, fd_file_name, fd_file_path, 
+    fd_file_tag, fd_file_type, fd_five, fd_four, fd_id, fd_is_available, fd_nine, fd_one, 
+    fd_parent_id, fd_person_id, fd_seven, fd_six, fd_size, fd_ten, fd_three, fd_two
+  </sql>
+  <sql id="select_where">
+    <where>
+        <if test="objectId != null">
+          and object_id = #{objectId,jdbcType=VARCHAR}
+        </if>
+        <if test="fdCreateTime != null">
+          and fd_create_time = #{fdCreateTime,jdbcType=VARCHAR}
+        </if>
+        <if test="fdEight != null">
+          and fd_eight = #{fdEight,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFileImagePath != null">
+          and fd_file_image_path = #{fdFileImagePath,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFileName != null">
+          and fd_file_name = #{fdFileName,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFilePath != null">
+          and fd_file_path = #{fdFilePath,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFileTag != null">
+          and fd_file_tag =  #{fdFileTag,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFileType != null">
+          and fd_file_type = #{fdFileType,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFive != null">
+          and fd_five = #{fdFive,jdbcType=VARCHAR}
+        </if>
+        <if test="fdFour != null">
+          and fd_four = #{fdFour,jdbcType=VARCHAR}
+        </if>
+        <if test="fdId != null">
+          and fd_id = #{fdId,jdbcType=VARCHAR}
+        </if>
+        <if test="fdIsAvailable != null">
+          and fd_is_available = #{fdIsAvailable,jdbcType=TINYINT}
+        </if>
+        <if test="fdNine != null">
+          and fd_nine = #{fdNine,jdbcType=VARCHAR}
+        </if>
+        <if test="fdOne != null">
+          and fd_one = #{fdOne,jdbcType=VARCHAR}
+        </if>
+        <if test="fdParentId != null">
+          and fd_parent_id = #{fdParentId,jdbcType=VARCHAR}
+        </if>
+        <if test="fdPersonId != null">
+          and fd_person_id = #{fdPersonId,jdbcType=VARCHAR}
+        </if>
+        <if test="fdSeven != null">
+          and fd_seven = #{fdSeven,jdbcType=VARCHAR}
+        </if>
+        <if test="fdSix != null">
+          and fd_six = #{fdSix,jdbcType=VARCHAR}
+        </if>
+        <if test="fdSize != null">
+          and fd_size = #{fdSize,jdbcType=VARCHAR}
+        </if>
+        <if test="fdTen != null">
+          and fd_ten = #{fdTen,jdbcType=VARCHAR}
+        </if>
+        <if test="fdThree != null">
+          and fd_three = #{fdThree,jdbcType=VARCHAR}
+        </if>
+        <if test="fdTwo != null">
+          and fd_two = #{fdTwo,jdbcType=VARCHAR}
+        </if>
+    </where>
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zx_file
+    where object_id = #{objectId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByFile" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from zx_file
+    <include refid="select_where" />
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from zx_file
+    where object_id = #{objectId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByIds" parameterType="java.util.List">
+    <foreach collection="list" separator=";" item="l">
+      delete from zx_file where object_id = #{l}
+    </foreach>
+  </delete>
+  <update id="updateToInvalid" parameterType="java.util.List">
+      <foreach collection="list" separator=";" item="l">
+        update zx_file set fd_is_available='0' where object_id = #{l}
+      </foreach>
+  </update>
+  <insert id="insert" parameterType="com.zhxshark.fileexplorer.file.model.ZxFile">
+    insert into zx_file (object_id, fd_create_time, fd_eight, 
+      fd_file_image_path, fd_file_name, fd_file_path, 
+      fd_file_tag, fd_file_type, fd_five, 
+      fd_four, fd_id, fd_is_available, 
+      fd_nine, fd_one, fd_parent_id, 
+      fd_person_id, fd_seven, fd_six, 
+      fd_size, fd_ten, fd_three, 
+      fd_two)
+    values (#{objectId,jdbcType=VARCHAR}, #{fdCreateTime,jdbcType=VARCHAR}, #{fdEight,jdbcType=VARCHAR}, 
+      #{fdFileImagePath,jdbcType=VARCHAR}, #{fdFileName,jdbcType=VARCHAR}, #{fdFilePath,jdbcType=VARCHAR}, 
+      #{fdFileTag,jdbcType=VARCHAR}, #{fdFileType,jdbcType=VARCHAR}, #{fdFive,jdbcType=VARCHAR}, 
+      #{fdFour,jdbcType=VARCHAR}, #{fdId,jdbcType=VARCHAR}, #{fdIsAvailable,jdbcType=TINYINT}, 
+      #{fdNine,jdbcType=VARCHAR}, #{fdOne,jdbcType=VARCHAR}, #{fdParentId,jdbcType=VARCHAR}, 
+      #{fdPersonId,jdbcType=VARCHAR}, #{fdSeven,jdbcType=VARCHAR}, #{fdSix,jdbcType=VARCHAR}, 
+      #{fdSize,jdbcType=VARCHAR}, #{fdTen,jdbcType=VARCHAR}, #{fdThree,jdbcType=VARCHAR}, 
+      #{fdTwo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhxshark.fileexplorer.file.model.ZxFile">
+    insert into zx_file
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="objectId != null">
+        object_id,
+      </if>
+      <if test="fdCreateTime != null">
+        fd_create_time,
+      </if>
+      <if test="fdEight != null">
+        fd_eight,
+      </if>
+      <if test="fdFileImagePath != null">
+        fd_file_image_path,
+      </if>
+      <if test="fdFileName != null">
+        fd_file_name,
+      </if>
+      <if test="fdFilePath != null">
+        fd_file_path,
+      </if>
+      <if test="fdFileTag != null">
+        fd_file_tag,
+      </if>
+      <if test="fdFileType != null">
+        fd_file_type,
+      </if>
+      <if test="fdFive != null">
+        fd_five,
+      </if>
+      <if test="fdFour != null">
+        fd_four,
+      </if>
+      <if test="fdId != null">
+        fd_id,
+      </if>
+      <if test="fdIsAvailable != null">
+        fd_is_available,
+      </if>
+      <if test="fdNine != null">
+        fd_nine,
+      </if>
+      <if test="fdOne != null">
+        fd_one,
+      </if>
+      <if test="fdParentId != null">
+        fd_parent_id,
+      </if>
+      <if test="fdPersonId != null">
+        fd_person_id,
+      </if>
+      <if test="fdSeven != null">
+        fd_seven,
+      </if>
+      <if test="fdSix != null">
+        fd_six,
+      </if>
+      <if test="fdSize != null">
+        fd_size,
+      </if>
+      <if test="fdTen != null">
+        fd_ten,
+      </if>
+      <if test="fdThree != null">
+        fd_three,
+      </if>
+      <if test="fdTwo != null">
+        fd_two,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="objectId != null">
+        #{objectId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCreateTime != null">
+        #{fdCreateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="fdEight != null">
+        #{fdEight,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileImagePath != null">
+        #{fdFileImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileName != null">
+        #{fdFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFilePath != null">
+        #{fdFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileTag != null">
+        #{fdFileTag,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileType != null">
+        #{fdFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFive != null">
+        #{fdFive,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFour != null">
+        #{fdFour,jdbcType=VARCHAR},
+      </if>
+      <if test="fdId != null">
+        #{fdId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdIsAvailable != null">
+        #{fdIsAvailable,jdbcType=TINYINT},
+      </if>
+      <if test="fdNine != null">
+        #{fdNine,jdbcType=VARCHAR},
+      </if>
+      <if test="fdOne != null">
+        #{fdOne,jdbcType=VARCHAR},
+      </if>
+      <if test="fdParentId != null">
+        #{fdParentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPersonId != null">
+        #{fdPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSeven != null">
+        #{fdSeven,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSix != null">
+        #{fdSix,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSize != null">
+        #{fdSize,jdbcType=VARCHAR},
+      </if>
+      <if test="fdTen != null">
+        #{fdTen,jdbcType=VARCHAR},
+      </if>
+      <if test="fdThree != null">
+        #{fdThree,jdbcType=VARCHAR},
+      </if>
+      <if test="fdTwo != null">
+        #{fdTwo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhxshark.fileexplorer.file.model.ZxFile">
+    update zx_file
+    <set>
+      <if test="fdCreateTime != null">
+        fd_create_time = #{fdCreateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="fdEight != null">
+        fd_eight = #{fdEight,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileImagePath != null">
+        fd_file_image_path = #{fdFileImagePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileName != null">
+        fd_file_name = #{fdFileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFilePath != null">
+        fd_file_path = #{fdFilePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileTag != null">
+        fd_file_tag = #{fdFileTag,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFileType != null">
+        fd_file_type = #{fdFileType,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFive != null">
+        fd_five = #{fdFive,jdbcType=VARCHAR},
+      </if>
+      <if test="fdFour != null">
+        fd_four = #{fdFour,jdbcType=VARCHAR},
+      </if>
+      <if test="fdId != null">
+        fd_id = #{fdId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdIsAvailable != null">
+        fd_is_available = #{fdIsAvailable,jdbcType=TINYINT},
+      </if>
+      <if test="fdNine != null">
+        fd_nine = #{fdNine,jdbcType=VARCHAR},
+      </if>
+      <if test="fdOne != null">
+        fd_one = #{fdOne,jdbcType=VARCHAR},
+      </if>
+      <if test="fdParentId != null">
+        fd_parent_id = #{fdParentId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPersonId != null">
+        fd_person_id = #{fdPersonId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSeven != null">
+        fd_seven = #{fdSeven,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSix != null">
+        fd_six = #{fdSix,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSize != null">
+        fd_size = #{fdSize,jdbcType=VARCHAR},
+      </if>
+      <if test="fdTen != null">
+        fd_ten = #{fdTen,jdbcType=VARCHAR},
+      </if>
+      <if test="fdThree != null">
+        fd_three = #{fdThree,jdbcType=VARCHAR},
+      </if>
+      <if test="fdTwo != null">
+        fd_two = #{fdTwo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where object_id = #{objectId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhxshark.fileexplorer.file.model.ZxFile">
+    update zx_file
+    set fd_create_time = #{fdCreateTime,jdbcType=VARCHAR},
+      fd_eight = #{fdEight,jdbcType=VARCHAR},
+      fd_file_image_path = #{fdFileImagePath,jdbcType=VARCHAR},
+      fd_file_name = #{fdFileName,jdbcType=VARCHAR},
+      fd_file_path = #{fdFilePath,jdbcType=VARCHAR},
+      fd_file_tag = #{fdFileTag,jdbcType=VARCHAR},
+      fd_file_type = #{fdFileType,jdbcType=VARCHAR},
+      fd_five = #{fdFive,jdbcType=VARCHAR},
+      fd_four = #{fdFour,jdbcType=VARCHAR},
+      fd_id = #{fdId,jdbcType=VARCHAR},
+      fd_is_available = #{fdIsAvailable,jdbcType=TINYINT},
+      fd_nine = #{fdNine,jdbcType=VARCHAR},
+      fd_one = #{fdOne,jdbcType=VARCHAR},
+      fd_parent_id = #{fdParentId,jdbcType=VARCHAR},
+      fd_person_id = #{fdPersonId,jdbcType=VARCHAR},
+      fd_seven = #{fdSeven,jdbcType=VARCHAR},
+      fd_six = #{fdSix,jdbcType=VARCHAR},
+      fd_size = #{fdSize,jdbcType=VARCHAR},
+      fd_ten = #{fdTen,jdbcType=VARCHAR},
+      fd_three = #{fdThree,jdbcType=VARCHAR},
+      fd_two = #{fdTwo,jdbcType=VARCHAR}
+    where object_id = #{objectId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhxshark.personmessage.mapper.ZxUserRolesMapper">
+  <cache type="com.zhxshark.personmessage.cache.MyRedisCache"/>
+  <resultMap id="BaseResultMap" type="com.zhxshark.personmessage.model.ZxUserRoles">
+    <id column="fd_id" jdbcType="VARCHAR" property="fdId" />
+    <result column="fd_code" jdbcType="VARCHAR" property="fdCode" />
+    <result column="fd_role_id" jdbcType="VARCHAR" property="fdRoleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ur.fd_id, ur.fd_code, ur.fd_role_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zx_user_roles ur
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByFdCode" resultMap="com.zhxshark.personmessage.mapper.ZxRolesMapper.BaseResultMap">
+    select
+    <include refid="com.zhxshark.personmessage.mapper.ZxRolesMapper.Base_Column_List" />
+    from zx_user_roles ur,zx_roles r
+    where ur.fd_code = #{fdCode,jdbcType=VARCHAR}
+    and ur.fd_role_id = r.fd_role_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from zx_user_roles
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhxshark.personmessage.model.ZxUserRoles">
+    insert into zx_user_roles (fd_id, fd_code, fd_role_id
+      )
+    values (#{fdId,jdbcType=VARCHAR}, #{fdCode,jdbcType=VARCHAR}, #{fdRoleId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhxshark.personmessage.model.ZxUserRoles">
+    insert into zx_user_roles
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fdId != null">
+        fd_id,
+      </if>
+      <if test="fdCode != null">
+        fd_code,
+      </if>
+      <if test="fdRoleId != null">
+        fd_role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fdId != null">
+        #{fdId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCode != null">
+        #{fdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fdRoleId != null">
+        #{fdRoleId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhxshark.personmessage.model.ZxUserRoles">
+    update zx_user_roles
+    <set>
+      <if test="fdCode != null">
+        fd_code = #{fdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fdRoleId != null">
+        fd_role_id = #{fdRoleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhxshark.personmessage.model.ZxUserRoles">
+    update zx_user_roles
+    set fd_code = #{fdCode,jdbcType=VARCHAR},
+      fd_role_id = #{fdRoleId,jdbcType=VARCHAR}
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </update>
+</mapper>

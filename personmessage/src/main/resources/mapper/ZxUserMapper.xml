@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhxshark.personmessage.mapper.ZxUserMapper">
+  <cache type="com.zhxshark.personmessage.cache.MyRedisCache"/>
+  <!-- 配置二级缓存 -->
+<!--  <cache/>为默认的二级缓存，有以下功能：
+      1.所有select语句会被缓存
+      2.所有的insert、update、delete会刷新缓存
+      3.缓存使用Least Recently Used(LRU,最近最少使用的)算法来收回
+-->
+<!-- 避免出现脏数据 -->
+<!--  <cache-ref namespace=""/>-->
+<!--  <cache-->
+<!--          eviction="FIFO"-->
+<!--          flushInterval="60000"-->
+<!--          size="512"-->
+<!--          readOnly="true"-->
+<!--  />-->
+  <resultMap id="BaseResultMap" type="com.zhxshark.personmessage.model.ZxUser">
+    <id column="fd_id" jdbcType="VARCHAR" property="fdId" />
+    <result column="fd_birthday" jdbcType="TIMESTAMP" property="fdBirthday" />
+    <result column="fd_code" jdbcType="VARCHAR" property="fdCode" />
+    <result column="fd_create_person" jdbcType="VARCHAR" property="fdCreatePerson" />
+    <result column="fd_create_time" jdbcType="TIMESTAMP" property="fdCreateTime" />
+    <result column="fd_email" jdbcType="VARCHAR" property="fdEmail" />
+    <result column="fd_login_name" jdbcType="VARCHAR" property="fdLoginName" />
+    <result column="fd_name" jdbcType="VARCHAR" property="fdName" />
+    <result column="fd_pass" jdbcType="VARCHAR" property="fdPass" />
+    <result column="fd_phone" jdbcType="VARCHAR" property="fdPhone" />
+    <result column="fd_sex" jdbcType="VARCHAR" property="fdSex" />
+    <result column="fd_update_person" jdbcType="VARCHAR" property="fdUpdatePerson" />
+    <result column="fd_update_time" jdbcType="TIMESTAMP" property="fdUpdateTime" />
+    <result column="fd_isavailable" jdbcType="VARCHAR" property="fdIsavailable" />
+  </resultMap>
+  <resultMap id="BaseResultMap2" type="com.zhxshark.personmessage.model.ZxUser" extends="BaseResultMap">
+    <collection property="roles" ofType="com.zhxshark.personmessage.model.ZxRoles" fetchType="eager"
+                select="com.zhxshark.personmessage.mapper.ZxUserRolesMapper.selectByFdCode" column="fd_code">
+    </collection>
+  </resultMap>
+  <resultMap id="BaseResultMap3" type="com.zhxshark.personmessage.model.ZxUser" extends="BaseResultMap">
+    <collection property="roles" ofType="com.zhxshark.personmessage.model.ZxRoles" fetchType="eager"
+                select="com.zhxshark.personmessage.mapper.ZxUserRolesMapper.selectByFdCode" column="fd_code">
+    </collection>
+  </resultMap>
+  <sql id="Base_Column_List">
+    u.fd_id, u.fd_birthday, u.fd_code, u.fd_create_person, u.fd_create_time, u.fd_email, u.fd_login_name,
+    u.fd_name, u.fd_pass, u.fd_phone, u.fd_sex, u.fd_update_person, u.fd_update_time, u.fd_isavailable
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from zx_user u
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </select>
+  <!--根据登录名查询用户-->
+  <!-- 一级缓存是默认开启的，flushCache为true则不会使用一级缓存，一级缓存在同一个sqlSession中生效。
+  任何的insert、delete、update操作都会清空一级缓存 -->
+    <select id="selectByLoginName" resultMap="BaseResultMap3" flushCache="false">
+      select
+      <include refid="Base_Column_List"></include>
+      from zx_user u
+      <where>
+        <trim>
+          <if test="fdLoginName != null">
+            and fd_login_name = #{fdLoginName,jdbcType=VARCHAR}
+          </if>
+        </trim>
+      </where>
+    </select>
+
+  <select id="selectAllUserByPage" parameterType="com.zhxshark.personmessage.model.ZxUser" resultMap="BaseResultMap2">
+    select
+    <include refid="Base_Column_List" />
+    from zx_user u
+      <where>
+        <if test="fdId != null">
+          and fd_id = #{fdId,jdbcType=VARCHAR}
+        </if>
+        <if test="fdBirthday != null">
+          and fd_birthday = #{fdBirthday,jdbcType=TIMESTAMP}
+        </if>
+        <if test="fdCode != null">
+          and fd_code = #{fdCode,jdbcType=VARCHAR}
+        </if>
+        <if test="fdCreatePerson != null">
+          and fd_create_person = #{fdCreatePerson,jdbcType=VARCHAR}
+        </if>
+        <if test="fdCreateTime != null">
+          and fd_create_time = #{fdCreateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="fdEmail != null">
+          and fd_email = #{fdEmail,jdbcType=VARCHAR}
+        </if>
+        <if test="fdLoginName != null">
+          and fd_login_name = #{fdLoginName,jdbcType=VARCHAR}
+        </if>
+        <if test="fdName != null">
+          and fd_name = #{fdName,jdbcType=VARCHAR}
+        </if>
+        <if test="fdPass != null">
+          and fd_pass = #{fdPass,jdbcType=VARCHAR}
+        </if>
+        <if test="fdPhone != null">
+          and fd_phone = #{fdPhone,jdbcType=VARCHAR}
+        </if>
+        <if test="fdSex != null">
+          and fd_sex = #{fdSex,jdbcType=VARCHAR}
+        </if>
+        <if test="fdUpdatePerson != null">
+          and fd_update_person = {fdUpdatePerson,jdbcType=VARCHAR}
+        </if>
+        <if test="fdUpdateTime != null">
+          and fd_update_time = {fdUpdateTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="fdIsavailable != null">
+          and fd_isavailable = #{fdIsavailable,jdbcType=VARCHAR}
+        </if>
+      </where>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from zx_user u
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhxshark.personmessage.model.ZxUser" flushCache="true">
+    insert into zx_user (fd_id, fd_birthday, fd_code, 
+      fd_create_person, fd_create_time, fd_email, 
+      fd_login_name, fd_name, fd_pass, 
+      fd_phone, fd_sex, fd_update_person, 
+      fd_update_time, fd_isavailable)
+    values (#{fdId,jdbcType=VARCHAR}, #{fdBirthday,jdbcType=TIMESTAMP}, #{fdCode,jdbcType=VARCHAR}, 
+      #{fdCreatePerson,jdbcType=VARCHAR}, #{fdCreateTime,jdbcType=TIMESTAMP}, #{fdEmail,jdbcType=VARCHAR}, 
+      #{fdLoginName,jdbcType=VARCHAR}, #{fdName,jdbcType=VARCHAR}, #{fdPass,jdbcType=VARCHAR}, 
+      #{fdPhone,jdbcType=VARCHAR}, #{fdSex,jdbcType=VARCHAR}, #{fdUpdatePerson,jdbcType=VARCHAR}, 
+      #{fdUpdateTime,jdbcType=TIMESTAMP}, #{fdIsavailable,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhxshark.personmessage.model.ZxUser" flushCache="true">
+    insert into zx_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fdId != null">
+        fd_id,
+      </if>
+      <if test="fdBirthday != null">
+        fd_birthday,
+      </if>
+      <if test="fdCode != null">
+        fd_code,
+      </if>
+      <if test="fdCreatePerson != null">
+        fd_create_person,
+      </if>
+      <if test="fdCreateTime != null">
+        fd_create_time,
+      </if>
+      <if test="fdEmail != null">
+        fd_email,
+      </if>
+      <if test="fdLoginName != null">
+        fd_login_name,
+      </if>
+      <if test="fdName != null">
+        fd_name,
+      </if>
+      <if test="fdPass != null">
+        fd_pass,
+      </if>
+      <if test="fdPhone != null">
+        fd_phone,
+      </if>
+      <if test="fdSex != null">
+        fd_sex,
+      </if>
+      <if test="fdUpdatePerson != null">
+        fd_update_person,
+      </if>
+      <if test="fdUpdateTime != null">
+        fd_update_time,
+      </if>
+      <if test="fdIsavailable != null">
+        fd_isavailable,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fdId != null">
+        #{fdId,jdbcType=VARCHAR},
+      </if>
+      <if test="fdBirthday != null">
+        #{fdBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdCode != null">
+        #{fdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCreatePerson != null">
+        #{fdCreatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCreateTime != null">
+        #{fdCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdEmail != null">
+        #{fdEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="fdLoginName != null">
+        #{fdLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdName != null">
+        #{fdName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPass != null">
+        #{fdPass,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPhone != null">
+        #{fdPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSex != null">
+        #{fdSex,jdbcType=VARCHAR},
+      </if>
+      <if test="fdUpdatePerson != null">
+        #{fdUpdatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fdUpdateTime != null">
+        #{fdUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdIsavailable != null">
+        #{fdIsavailable,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhxshark.personmessage.model.ZxUser" flushCache="true">
+    update zx_user
+    <set>
+      <if test="fdBirthday != null">
+        fd_birthday = #{fdBirthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdCode != null">
+        fd_code = #{fdCode,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCreatePerson != null">
+        fd_create_person = #{fdCreatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fdCreateTime != null">
+        fd_create_time = #{fdCreateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdEmail != null">
+        fd_email = #{fdEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="fdLoginName != null">
+        fd_login_name = #{fdLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdName != null">
+        fd_name = #{fdName,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPass != null">
+        fd_pass = #{fdPass,jdbcType=VARCHAR},
+      </if>
+      <if test="fdPhone != null">
+        fd_phone = #{fdPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="fdSex != null">
+        fd_sex = #{fdSex,jdbcType=VARCHAR},
+      </if>
+      <if test="fdUpdatePerson != null">
+        fd_update_person = #{fdUpdatePerson,jdbcType=VARCHAR},
+      </if>
+      <if test="fdUpdateTime != null">
+        fd_update_time = #{fdUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fdIsavailable != null">
+        fd_isavailable = #{fdIsavailable,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhxshark.personmessage.model.ZxUser" flushCache="true">
+    update zx_user
+    set fd_birthday = #{fdBirthday,jdbcType=TIMESTAMP},
+      fd_code = #{fdCode,jdbcType=VARCHAR},
+      fd_create_person = #{fdCreatePerson,jdbcType=VARCHAR},
+      fd_create_time = #{fdCreateTime,jdbcType=TIMESTAMP},
+      fd_email = #{fdEmail,jdbcType=VARCHAR},
+      fd_login_name = #{fdLoginName,jdbcType=VARCHAR},
+      fd_name = #{fdName,jdbcType=VARCHAR},
+      fd_pass = #{fdPass,jdbcType=VARCHAR},
+      fd_phone = #{fdPhone,jdbcType=VARCHAR},
+      fd_sex = #{fdSex,jdbcType=VARCHAR},
+      fd_update_person = #{fdUpdatePerson,jdbcType=VARCHAR},
+      fd_update_time = #{fdUpdateTime,jdbcType=TIMESTAMP},
+      fd_isavailable = #{fdIsavailable,jdbcType=VARCHAR}
+    where fd_id = #{fdId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: spring-cloud-eureka
+server:
+  port: 8880
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8880/eureka/
+    fetch-registry: false
+    register-with-eureka: false

@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: person-message
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: zhxshark
+    password: zzzx19961026
+    url: jdbc:mysql://localhost:3306/zxblog?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+  redis:
+    port: 6379
+    database: 0  #默认是使用0号数据库，默认有16个数据库
+    password:
+    host: localhost
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/zxblog
+  jackson:
+    date-format: yyyy-MM-dd HH-mm-ss
+server:
+  port: 9001
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8880/eureka/
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.zhxshark.personmessage.model
+  configuration:
+    aggressive-lazy-loading: false
+    lazy-loading-enabled: true
+    lazy-load-trigger-methods:
+    cache-enabled: true   #开启缓存，默认为true
+logging:
+  level:
+    com.zhxshark.personmessage.mapper : debug
+
+#github登录
+github:
+  client:
+    clientId: 189297587a1440dbb730
+    clientSecret: e6bea481f0087ecee588c83bfa0b8ffc7280e004
+    accessTokenUri: https://github.com/login/oauth/access_token?grant_type=%s&code=%s&redirect_uri=%s&client_id=%s&client_secret=%s
+    userAuthorizationUri: https://github.com/login/oauth/authorize?client_id=%s&redirect_uri=%s&state=%s
+    clientAuthenticationScheme: form
+    callbackUrl: http://localhost:9001/user/login/github/callback
+    registeredRedirectUri: http://localhost:9001/user/login/github/callback
+    useCurrentUri: false
+    grantType: authorization_code
+  resource:
+    userInfoUri: https://api.github.com/user?access_token=%s

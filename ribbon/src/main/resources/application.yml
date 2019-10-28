@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: service-ribbon
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8880/eureka/
+server:
+  port: 8883

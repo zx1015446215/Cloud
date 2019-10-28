@@ -1,0 +1,5 @@
+ExceptionResult:
+  message: 系统出错，请联系管理员
+  error: 系统出错，请联系管理员
+  status: 9999
+  path: /error

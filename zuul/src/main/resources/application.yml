@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: service-zuul
+  profiles:
+    include: commen
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+#    热部署
+#  devtools:
+#    restart:
+#      enabled: true   #设置开启热部署，默认开启
+#  freemarker:
+#    cache: false  #页面不加载缓存，修改时则生效
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: zhxshark
+#    password: zzzx19961026
+#    url: jdbc:mysql://localhost:3306/zxblog?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8880/eureka/
+server:
+  port: 8881
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+zuul:
+#  ignored-services: "*"   #忽略到所有的路由
+#  ignored-patterns: /**/hello/**   #忽略到含有hello的路由
+#  prefix: /zuul   #统一为路由器增加前缀
+  routes:
+    local:
+      path: /local/**
+      url: forward:/user  #跳转到zuul的controller处理一些事务
+#    eureka-producer: /api-a/**
+    api-a:
+      path: /api-a/**
+      serviceId: service-ribbon
+      retryable: true  #打开某一个服务的重试机制
+      ReadTimeout: 2000   #超时时间
+      ConnectTimeout: 1000    #连接时间
+      MaxAutoRetries: 1     #对当前实例的重试次数，默认0
+      MaxAutoRetriesNextServer: 1    #对切换实例的重试次数，默认1
+    api-b:
+      path: /api-b/**
+      serviceId: service-feign
+    view:
+      path: /api-c/**
+      stripPrefix: true
+      serviceId: person-message
+      retryable: true  #打开某一个服务的重试机制
+      ReadTimeout: 2000   #超时时间
+      ConnectTimeout: 1000    #连接时间
+      MaxAutoRetries: 1     #对当前实例的重试次数，默认0
+      MaxAutoRetriesNextServer: 1    #对切换实例的重试次数，默认1
+  retryable: true  #全局重试机制
+  add-host-header: true  #表示API网关在进行请求路由之前为请求设置Host头信息
+  ignore-security-headers: false   #不忽略框架与权限相关的头信息
+  sensitive-headers:   #不忽略任何头部信息，所有header都转发到下游的资源服务器
+#mybatis:
+#  mapper-locations: classpath:mapper/**/*.xml
+#  type-aliases-package: com.krahsxhz.zuul.model
+#  configuration:
+#    aggressive-lazy-loading: false
+#    lazy-loading-enabled: true
+#    lazy-load-trigger-methods:
+#logging:
+#  level:
+#    com.krahsxhz.zuul.mapper : debug
