@@ -124,8 +124,6 @@ public class FileController {
     @RequestMapping(value = "find", method = RequestMethod.POST)
     public JsonResult find(@RequestBody(required = false) ZxFile file, HttpServletRequest request){
         logger.warn("进入find");
-//        int pageNo = request.getAttribute("pageNo")==null?1:(Integer)request.getAttribute("pageNo");
-//        int pageSize = request.getAttribute("pageSize")==null?5:(Integer)request.getAttribute("pageSize");
         List<ZxFile> files;
         try {
            files = fileService.findFiles(file);

@@ -1,8 +1,6 @@
 package com.zhxshark.fileexplorer.file.service.impl;
 
-import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.mysql.cj.x.protobuf.MysqlxResultset;
 import com.zhxshark.fileexplorer.commen.util.DateUtils;
 import com.zhxshark.fileexplorer.commen.util.FileUtils;
 import com.zhxshark.fileexplorer.commen.util.GenerateUtile;
@@ -184,7 +182,7 @@ public class FileServiceImpl implements FileService {
                 os.flush();
             }
         }catch (Exception e){
-
+            throw new IOException();
         }finally {
             /**
              * 关闭流
