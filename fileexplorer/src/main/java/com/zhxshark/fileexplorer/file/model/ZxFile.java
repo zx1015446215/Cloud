@@ -2,6 +2,7 @@ package com.zhxshark.fileexplorer.file.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zhxshark.fileexplorer.commen.model.Page;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * @date 2019/10/21 16:05
  */
 @Entity
-public class ZxFile implements Serializable {
+public class ZxFile extends Page implements Serializable{
 
     @Id
     private String ObjectId; //mongodb中的编号

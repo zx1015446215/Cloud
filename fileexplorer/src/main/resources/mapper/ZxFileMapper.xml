@@ -108,7 +108,7 @@
     from zx_file
     where object_id = #{objectId,jdbcType=VARCHAR}
   </select>
-  <select id="selectByFile" resultMap="BaseResultMap">
+  <select id="selectByPage" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from zx_file

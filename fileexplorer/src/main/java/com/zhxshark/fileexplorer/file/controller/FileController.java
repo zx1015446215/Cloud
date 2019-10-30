@@ -1,9 +1,9 @@
 package com.zhxshark.fileexplorer.file.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.zhxshark.fileexplorer.commen.model.JsonResult;
 import com.zhxshark.fileexplorer.file.model.ZxFile;
 import com.zhxshark.fileexplorer.file.service.FileService;
-import com.zhxshark.fileexplorer.file.vo.ZxFileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.persistence.Id;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
@@ -120,7 +122,7 @@ public class FileController {
      * @return
      */
     @RequestMapping(value = "find", method = RequestMethod.POST)
-    public JsonResult find(@RequestBody(required = false) ZxFileVO file, HttpServletRequest request){
+    public JsonResult find(@RequestBody(required = false) ZxFile file, HttpServletRequest request){
         logger.warn("进入find");
 //        int pageNo = request.getAttribute("pageNo")==null?1:(Integer)request.getAttribute("pageNo");
 //        int pageSize = request.getAttribute("pageSize")==null?5:(Integer)request.getAttribute("pageSize");
@@ -132,6 +134,29 @@ public class FileController {
             return new JsonResult(JsonResult.ERROR,e.getMessage());
         }
         return new JsonResult(files);
+    }
+
+    @RequestMapping(value = "download",method = RequestMethod.GET)
+    public void download(HttpServletResponse response,HttpServletRequest request){
+        String id = request.getParameter("id");
+        if(id==null){
+            try {
+                response.getWriter().write(JSON.toJSONString(new JsonResult(JsonResult.ERROR,"id is null")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            fileService.downloadFile(response, id);
+        }catch (Exception e){
+            e.printStackTrace();
+            try {
+                response.getWriter().write(JSON.toJSONString(new JsonResult(JsonResult.ERROR,"fail download")));
+            } catch (IOException ie) {
+                ie.printStackTrace();
+            }
+        }
+
     }
 
 

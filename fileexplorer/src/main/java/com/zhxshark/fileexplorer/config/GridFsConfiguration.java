@@ -10,6 +10,8 @@ import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import java.util.logging.Logger;
+
 /**
  * @author zhuxin
  * @date 2019/10/21 19:35
@@ -24,12 +26,12 @@ public class GridFsConfiguration extends AbstractMongoConfiguration {
 
     @Override
     public MongoClient mongoClient() {
-        return new MongoClient(env.getProperty("host"));
+        return new MongoClient(env.getProperty("spring.data.mongodb.host"));
     }
 
     @Override
     protected String getDatabaseName() {
-        return env.getProperty("database");
+        return env.getProperty("spring.data.mongodb.database");
     }
 
     @Bean

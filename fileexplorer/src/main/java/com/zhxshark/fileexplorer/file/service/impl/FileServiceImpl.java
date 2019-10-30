@@ -1,19 +1,15 @@
 package com.zhxshark.fileexplorer.file.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.mongodb.client.MongoCursor;
 import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.mongodb.client.gridfs.model.GridFSFile;
+import com.mysql.cj.x.protobuf.MysqlxResultset;
 import com.zhxshark.fileexplorer.commen.util.DateUtils;
 import com.zhxshark.fileexplorer.commen.util.FileUtils;
 import com.zhxshark.fileexplorer.commen.util.GenerateUtile;
-import com.zhxshark.fileexplorer.commen.util.ObjectUtils;
 import com.zhxshark.fileexplorer.file.enumerate.FileEnum;
 import com.zhxshark.fileexplorer.file.mapper.ZxFileMapper;
 import com.zhxshark.fileexplorer.file.model.ZxFile;
 import com.zhxshark.fileexplorer.file.service.FileService;
-import com.zhxshark.fileexplorer.file.vo.ZxFileVO;
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,14 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 
@@ -127,7 +128,7 @@ public class FileServiceImpl implements FileService {
 
 
     @Override
-    public List<ZxFile> findFiles(ZxFileVO file) {
+    public List<ZxFile> findFiles(ZxFile file) {
 //        Query query = new Query();
 //        Criteria criteria = new Criteria();
 //        String[] fieldNames = ObjectUtils.getFieldNames(file);
@@ -151,7 +152,49 @@ public class FileServiceImpl implements FileService {
         /**
          * 从mysql中获取
          */
-        List<ZxFile> zxFiles = zxFileMapper.selectByFile(file);
+        List<ZxFile> zxFiles = zxFileMapper.selectByPage(file);
         return zxFiles;
+    }
+
+    @Override
+    public void downloadFile(HttpServletResponse response, String id) throws Exception {
+        GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(new ObjectId(id))));
+        if(gridFSFile == null){
+            throw new Exception();
+        }
+        GridFsResource resource = gridFsTemplate.getResource(gridFSFile);
+        BufferedInputStream bis = null;
+        InputStream is = null;
+        ServletOutputStream os = null;
+        try {
+            String filename = resource.getFilename();
+            //设置response
+            response.setHeader("content-type","application/octet-stream");
+            response.setContentType("application/octet-stream");
+            //文件下载之后能正常显示中文
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(filename,"UTF-8"));
+            //实现文件下载
+            byte[] buffer = new byte[1024];
+            os =response.getOutputStream();
+            is = resource.getInputStream();
+            bis = new BufferedInputStream(is);
+            int i ;
+            while ((i = bis.read(buffer))!=-1){
+                os.write(buffer,0,buffer.length);
+                os.flush();
+            }
+        }catch (Exception e){
+
+        }finally {
+            /**
+             * 关闭流
+             */
+            try {
+                if (bis != null) bis.close();
+            } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+
     }
 }

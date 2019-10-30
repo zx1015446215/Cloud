@@ -1,5 +1,7 @@
 server:
   port: 9002
+  tomcat:
+    uri-encoding: UTF-8
 spring:
   application:
     name: file-explorer
