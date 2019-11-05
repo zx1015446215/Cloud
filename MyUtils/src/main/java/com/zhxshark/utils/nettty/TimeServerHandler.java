@@ -3,13 +3,13 @@ package com.zhxshark.utils.nettty;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class TimeServerHandler extends SimpleChannelInboundHandler {
+public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     /**
      * 收到客户端的消息，自动触发
-     * @param channelHandlerContext
-     * @param o
+     * @param chc
+     * @param msg
      * @throws Exception
      */
     protected void channelRead0(ChannelHandlerContext chc, Object msg) throws Exception {
