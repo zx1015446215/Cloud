@@ -6,14 +6,16 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
 public class TimeServerHandler extends ChannelInboundHandlerAdapter {
+
     /**
      * 收到客户端的消息，自动触发
-     * @param chc
+     * @param ctx
      * @param msg
      * @throws Exception
      */
-    protected void channelRead0(ChannelHandlerContext chc, Object msg) throws Exception {
-
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("收到消息");
         ByteBuf byteBuf = (ByteBuf)msg;
 
         byte[] reg = new byte[byteBuf.readableBytes()];
@@ -31,8 +33,9 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
          */
         String respMsg = "I am Server , 消息接收Success";
         ByteBuf respByteBuf = Unpooled.copiedBuffer(respMsg.getBytes());
-        chc.write(respByteBuf);
+        ctx.write(respByteBuf);
     }
+
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
